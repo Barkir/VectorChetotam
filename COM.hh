@@ -21,12 +21,12 @@ constexpr bool FAILED( HRESULT hr ) { return hr < 0; }
 
 struct IID
 {
-    uint8_t data[16];
+    uint64_t id;
 };
 
 inline bool operator == ( const IID & a, const IID & b )
 {
-    return !memcmp( a.data, b.data, sizeof( a.data ) );
+    return a.id == b.id;
 }
 
 inline bool operator!=( const IID & a, const IID & b )

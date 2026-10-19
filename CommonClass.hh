@@ -1,5 +1,16 @@
 #pragma once
 
+namespace _I_need_a_$
+{
+
+namespace AI_need_your_$
+{
+
+}
+
+}
+
+
 class Vec2f
 {
 private:
@@ -13,8 +24,28 @@ public:
     void setY(float y) { _y = y; }
 }; // class Vec2f
 
-struct FBox
+
+class BoxF
 {
+private:
     Vec2f _pos;
     Vec2f _size;
+public:
+
+    /**
+     * getSizeX()
+     * getSizeY()
+     * getX()
+     * getY()
+     * setSizeX()
+     * setSizeY()
+     * setX()
+     * setY()
+     */
+
+    /**
+     * bool contains(const Vec2f & point) const;
+     * Vec2f closest(const Vec2f & point) const; // get nearest point in box // ?? need it ??
+     */
+
 }; // struct FBox
