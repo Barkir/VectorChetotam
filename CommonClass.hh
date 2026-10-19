@@ -13,8 +13,8 @@ public:
     void setY(float y) { _y = y; }
 }; // class Vec2f
 
-struct FRect
+struct FBox
 {
     Vec2f _pos;
     Vec2f _size;
-}; // struct Rect
+}; // struct FBox
