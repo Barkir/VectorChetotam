@@ -8,30 +8,39 @@ namespace AI_need_your_$
 
 }
 
-}
-
+} // namespace _I_need_a_$
 
 class Vec2f
 {
 private:
-    float _x = 0,
-          _y = 0;
+    float _x = 0, _y = 0;
 
 public:
-    float getX() const { return _x; }
-    float getY() const { return _y; }
-    void setX(float x) { _x = x; }
-    void setY(float y) { _y = y; }
+    float getX() const
+    {
+        return _x;
+    }
+    float getY() const
+    {
+        return _y;
+    }
+    void setX( float x )
+    {
+        _x = x;
+    }
+    void setY( float y )
+    {
+        _y = y;
+    }
 }; // class Vec2f
-
 
 class BoxF
 {
 private:
     Vec2f _pos;
     Vec2f _size;
-public:
 
+public:
     /**
      * getSizeX()
      * getSizeY()
