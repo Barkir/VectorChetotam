@@ -11,8 +11,6 @@
 #include "SDK/Interfaces/IUnknown.hpp"
 #include "SDK/Interfaces/IPlugin.hpp"
 #include "SDK/Utils/AObject.hpp"
-
-constexpr IID IID_IUnknown   = 0x0001;
 constexpr IID IID_IPlugin    = 0x0002; 
 constexpr IID IID_IRender    = 0x0003;
 constexpr IID IID_IInputPump = 0x0004;
@@ -27,6 +25,11 @@ class ILogger;
 
 class ApplicationCore {
 private:
+    IRender*        render_ = nullptr;
+    IInputPump*     input_  = nullptr;
+    ILogger*        logger_ = nullptr;
+    ToolManager*     tool_manager_;
+
     std::unordered_map<IID, IPlugin*> registry_;
 
     std::unique_ptr<AObject> root_;
@@ -68,7 +71,13 @@ public:
     // --- Getters & Setters ---
     
     AObject*    getRoot()      const { return root_.get(); }
-    
+    IInputPump* getInputPump()      const { return input_; }
+    ILogger*    getLogger()         const { return logger_; }
+    AObject*    getRoot()           const { return root_.get(); }
+    ToolManager* getToolManager()   const { return tool_manager_; }
+
+    // -------------------------------------------------------------------------------
+
     void stop() { is_running_ = false; }
 
     // -------------------------------------------------------------------------------
