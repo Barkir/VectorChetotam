@@ -5,11 +5,6 @@ Checks: '-*,readability-*,-readability-redundant-member-init,-readability-redund
 WarningsAsErrors: '*'
 
 CheckOptions:
-  - key: readability-function-size.LineThreshold
-    value: '120'
-  - key: readability-function-size.ParameterThreshold
-    value: '5'
-
   - key: readability-identifier-naming.NamespaceCase
     value: 'CamelCase'
   - key: readability-identifier-naming.TypeAliasCase
