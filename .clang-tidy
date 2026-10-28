@@ -37,9 +37,9 @@ CheckOptions:
     value: 'UPPER_CASE'
 
   - key: readability-identifier-naming.FunctionCase
-    value: 'lowerCamelCase'
+    value: 'camelBack'
   - key: readability-identifier-naming.MethodCase
-    value: 'lowerCamelCase'
+    value: 'camelBack'
 
   - key: readability-identifier-naming.MemberCase
     value: 'lower_case'
