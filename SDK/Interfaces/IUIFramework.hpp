@@ -1,4 +1,5 @@
-#pragma once
+#ifndef I_UI_FRAMEWORK_HPP
+#define I_UI_FRAMEWORK_HPP
 
 #include <functional>
 #include <memory>
@@ -174,3 +175,5 @@ public:
 }; // class IFramework
 
 }; // namespace UI
+
+#endif // I_UI_FRAMEWORK_HPP
