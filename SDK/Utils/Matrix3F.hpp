@@ -19,23 +19,24 @@ public:
 
     constexpr Matrix3F() :
         values_{
-            {{1.0F, 0.0F, 0.0F}, {0.0F, 1.0F, 0.0F}, {0.0F, 0.0F, 1.0F}},
-    }
-    {
-    }
+            {{1.0F, 0.0F, 0.0F},
+             {0.0F, 1.0F, 0.0F},
+             {0.0F, 0.0F, 1.0F}}
+
+    {}
 
     constexpr explicit Matrix3F(const Storage& values) : values_(values)
     {
     }
 
-    constexpr float& operator()(int row, int column)
+    constexpr std::array<float, DIMENSION>& operator[](std::size_t row)
     {
-        return values_[static_cast<std::size_t>(row)][static_cast<std::size_t>(column)];
+        return values_[row];
     }
 
-    constexpr float operator()(int row, int column) const
+    constexpr const std::array<float, DIMENSION>& operator[](std::size_t row) const
     {
-        return values_[static_cast<std::size_t>(row)][static_cast<std::size_t>(column)];
+        return values_[row];
     }
 
     static constexpr Matrix3F identity()
@@ -56,7 +57,7 @@ public:
     static Matrix3F rotation(float radians)
     {
         const float cose = std::cos(radians);
-        const float sine   = std::sin(radians);
+        const float sine = std::sin(radians);
 
         return Matrix3F{Storage{{{cose, -sine, 0.0F}, {sine, cose, 0.0F}, {0.0F, 0.0F, 1.0F}}}};
     }
@@ -68,53 +69,35 @@ public:
 
     constexpr Matrix3F operator+(const Matrix3F& rhs) const
     {
-        Matrix3F result{Storage{}};
-        for (std::size_t row = 0; row < DIMENSION; ++row)
-        {
-            for (std::size_t column = 0; column < DIMENSION; ++column)
-            {
-                result.values_[row][column] = values_[row][column] + rhs.values_[row][column];
-            }
-        }
+        Matrix3F result = *this;
+        result += rhs;
         return result;
     }
 
     constexpr Matrix3F operator-(const Matrix3F& rhs) const
     {
-        Matrix3F result{Storage{}};
-        for (std::size_t row = 0; row < DIMENSION; ++row)
-        {
-            for (std::size_t column = 0; column < DIMENSION; ++column)
-            {
-                result.values_[row][column] = values_[row][column] - rhs.values_[row][column];
-            }
-        }
+        Matrix3F result = *this;
+        result -= rhs;
         return result;
     }
 
     constexpr Matrix3F operator*(float scalar) const
     {
-        Matrix3F result{Storage{}};
-        for (std::size_t row = 0; row < DIMENSION; ++row)
-        {
-            for (std::size_t column = 0; column < DIMENSION; ++column)
-            {
-                result.values_[row][column] = values_[row][column] * scalar;
-            }
-        }
+        Matrix3F result = *this;
+        result *= scalar;
         return result;
     }
 
     constexpr Matrix3F operator*(const Matrix3F& rhs) const
     {
         Matrix3F result{Storage{}};
-        for (int row = 0; row < static_cast<int>(DIMENSION); ++row)
+        for (std::size_t row = 0; row < DIMENSION; ++row)
         {
-            for (int column = 0; column < static_cast<int>(DIMENSION); ++column)
+            for (std::size_t column = 0; column < DIMENSION; ++column)
             {
-                for (int k = 0; k < static_cast<int>(DIMENSION); ++k)
+                for (std::size_t k = 0; k < DIMENSION; ++k)
                 {
-                    result(row, column) += (*this)(row, k) * rhs(k, column);
+                    result[row][column] += (*this)[row][k] * rhs[k][column];
                 }
             }
         }
@@ -123,19 +106,37 @@ public:
 
     constexpr Matrix3F& operator+=(const Matrix3F& rhs)
     {
-        *this = *this + rhs;
+        for (std::size_t row = 0; row < DIMENSION; ++row)
+        {
+            for (std::size_t column = 0; column < DIMENSION; ++column)
+            {
+                values_[row][column] += rhs.values_[row][column];
+            }
+        }
         return *this;
     }
 
     constexpr Matrix3F& operator-=(const Matrix3F& rhs)
     {
-        *this = *this - rhs;
+        for (std::size_t row = 0; row < DIMENSION; ++row)
+        {
+            for (std::size_t column = 0; column < DIMENSION; ++column)
+            {
+                values_[row][column] -= rhs.values_[row][column];
+            }
+        }
         return *this;
     }
 
     constexpr Matrix3F& operator*=(float scalar)
     {
-        *this = *this * scalar;
+        for (std::size_t row = 0; row < DIMENSION; ++row)
+        {
+            for (std::size_t column = 0; column < DIMENSION; ++column)
+            {
+                values_[row][column] *= scalar;
+            }
+        }
         return *this;
     }
 
@@ -157,9 +158,9 @@ public:
 
     Vec2F transformPoint(const Vec2F& point) const
     {
-        const float transformed_x = ((*this)(0, 0) * point.x) + ((*this)(0, 1) * point.y) + (*this)(0, 2);
-        const float transformed_y = ((*this)(1, 0) * point.x) + ((*this)(1, 1) * point.y) + (*this)(1, 2);
-        const float homogeneous_w = ((*this)(2, 0) * point.x) + ((*this)(2, 1) * point.y) + (*this)(2, 2);
+        const float transformed_x = ((*this)[0][0] * point.x) + ((*this)[0][1] * point.y) + (*this)[0][2];
+        const float transformed_y = ((*this)[1][0] * point.x) + ((*this)[1][1] * point.y) + (*this)[1][2];
+        const float homogeneous_w = ((*this)[2][0] * point.x) + ((*this)[2][1] * point.y) + (*this)[2][2];
 
         if (std::abs(homogeneous_w) <= DEFAULT_EPSILON)
         {
@@ -184,9 +185,9 @@ public:
 
     constexpr float determinant() const
     {
-        return ((*this)(0, 0) * (((*this)(1, 1) * (*this)(2, 2)) - ((*this)(1, 2) * (*this)(2, 1)))) -
-               ((*this)(0, 1) * (((*this)(1, 0) * (*this)(2, 2)) - ((*this)(1, 2) * (*this)(2, 0)))) +
-               ((*this)(0, 2) * (((*this)(1, 0) * (*this)(2, 1)) - ((*this)(1, 1) * (*this)(2, 0))));
+        return ((*this)[0][0] * (((*this)[1][1] * (*this)[2][2]) - ((*this)[1][2] * (*this)[2][1]))) -
+               ((*this)[0][1] * (((*this)[1][0] * (*this)[2][2]) - ((*this)[1][2] * (*this)[2][0]))) +
+               ((*this)[0][2] * (((*this)[1][0] * (*this)[2][1]) - ((*this)[1][1] * (*this)[2][0])));
     }
 
     bool tryInverse(Matrix3F& result, float epsilon = DEFAULT_EPSILON) const
@@ -199,15 +200,15 @@ public:
 
         const float inv = 1.0F / det;
         result          = Matrix3F{};
-        result(0, 0)    = (((*this)(1, 1) * (*this)(2, 2)) - ((*this)(1, 2) * (*this)(2, 1))) * inv;
-        result(0, 1)    = (((*this)(0, 2) * (*this)(2, 1)) - ((*this)(0, 1) * (*this)(2, 2))) * inv;
-        result(0, 2)    = (((*this)(0, 1) * (*this)(1, 2)) - ((*this)(0, 2) * (*this)(1, 1))) * inv;
-        result(1, 0)    = (((*this)(1, 2) * (*this)(2, 0)) - ((*this)(1, 0) * (*this)(2, 2))) * inv;
-        result(1, 1)    = (((*this)(0, 0) * (*this)(2, 2)) - ((*this)(0, 2) * (*this)(2, 0))) * inv;
-        result(1, 2)    = (((*this)(0, 2) * (*this)(1, 0)) - ((*this)(0, 0) * (*this)(1, 2))) * inv;
-        result(2, 0)    = (((*this)(1, 0) * (*this)(2, 1)) - ((*this)(1, 1) * (*this)(2, 0))) * inv;
-        result(2, 1)    = (((*this)(0, 1) * (*this)(2, 0)) - ((*this)(0, 0) * (*this)(2, 1))) * inv;
-        result(2, 2)    = (((*this)(0, 0) * (*this)(1, 1)) - ((*this)(0, 1) * (*this)(1, 0))) * inv;
+        result[0][0]    = (((*this)[1][1] * (*this)[2][2]) - ((*this)[1][2] * (*this)[2][1])) * inv;
+        result[0][1]    = (((*this)[0][2] * (*this)[2][1]) - ((*this)[0][1] * (*this)[2][2])) * inv;
+        result[0][2]    = (((*this)[0][1] * (*this)[1][2]) - ((*this)[0][2] * (*this)[1][1])) * inv;
+        result[1][0]    = (((*this)[1][2] * (*this)[2][0]) - ((*this)[1][0] * (*this)[2][2])) * inv;
+        result[1][1]    = (((*this)[0][0] * (*this)[2][2]) - ((*this)[0][2] * (*this)[2][0])) * inv;
+        result[1][2]    = (((*this)[0][2] * (*this)[1][0]) - ((*this)[0][0] * (*this)[1][2])) * inv;
+        result[2][0]    = (((*this)[1][0] * (*this)[2][1]) - ((*this)[1][1] * (*this)[2][0])) * inv;
+        result[2][1]    = (((*this)[0][1] * (*this)[2][0]) - ((*this)[0][0] * (*this)[2][1])) * inv;
+        result[2][2]    = (((*this)[0][0] * (*this)[1][1]) - ((*this)[0][1] * (*this)[1][0])) * inv;
         return true;
     }
 
