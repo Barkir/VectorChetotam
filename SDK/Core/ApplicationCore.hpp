@@ -68,9 +68,6 @@ public:
     // -------------------------------------------------------------------------------
     // --- Getters & Setters ---
     
-    IRender*    getRender()    const { return render_; }
-    IInputPump* getInputPump() const { return input_; }
-    ILogger*    getLogger()    const { return logger_; }
     AObject*    getRoot()      const { return root_.get(); }
 
     // -------------------------------------------------------------------------------

@@ -3,8 +3,8 @@
 
 class Vec2f {
 private:
-    float x_ = 0.0f;
-    float y_ = 0.0f;
+    float x_ = 0.0F;
+    float y_ = 0.0F;
 
 public:
     Vec2f() = default;
