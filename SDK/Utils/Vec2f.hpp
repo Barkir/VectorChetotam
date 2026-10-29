@@ -1,6 +1,8 @@
 #ifndef _MY_VEC2F_HPP_
 #define _MY_VEC2F_HPP_
 
+#include <cmath>
+
 class Vec2f {
 private:
     float x_ = 0.0f;

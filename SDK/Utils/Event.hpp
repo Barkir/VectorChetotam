@@ -1,5 +1,5 @@
-#ifndef EVENT_HPP
-#define EVENT_HPP
+#ifndef PHOTOSHOP_EVENT_HPP
+#define PHOTOSHOP_EVENT_HPP
 
 #include "SDK/Utils/Vec2F.hpp"
 
