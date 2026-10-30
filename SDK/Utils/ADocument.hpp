@@ -12,7 +12,7 @@ class ITool;
 class IDocument : private AObject
 {
 public:
-    using ShapeID = size_t;
+    using ShapeID                      = size_t;
     static constexpr ShapeID NULLSHAPE = SIZE_MAX;
 
 public:
