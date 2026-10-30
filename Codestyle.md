@@ -9,13 +9,13 @@
 1. Закоммитить текущее состояние, чтобы изменения было легко просмотреть:
 
 ```bash
-git commit -m "... before codestyle changes"
+git commit -m "..."
 ```
 
 2. Проверить, какие файлы не соответствуют стилю (ничего не меняет):
 
 ```bash
-./check-tidy.sh
+./check-tidy.sh "Compiler options"
 ./check-format.sh
 ```
 
@@ -27,11 +27,10 @@ git commit -m "... before codestyle changes"
 ./make-formatted.sh
 ```
 
-5. Посмотреть изменения и при необходимости откатить:
+5. Закоммитить обновлённое состояние:
 
 ```bash
-git diff --stat
-git checkout -- .
+git commit -m "... apply codestyle changes"
 ```
 
 ## Стиль, который реализует форматтер
