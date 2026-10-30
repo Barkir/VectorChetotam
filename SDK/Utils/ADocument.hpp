@@ -5,7 +5,6 @@
 #include "SDK/Utils/AShape.hpp"
 
 #include <memory>
-#include <optional>
 
 // Forward declaration
 class ITool;
@@ -20,9 +19,10 @@ public:
 
 
 
-    virtual ShapeID addShape(std::unique_ptr<AShape> const& shape)
+    virtual ShapeID addShape(std::unique_ptr<AShape> shape)
     {
         addChild(std::unique_ptr<AObject>(shape.get()));
+        shape.release();
         return getChildren().size() - 1;
     }
     virtual AShape* queryShape(ShapeID const& sid)
@@ -38,7 +38,7 @@ public:
 
 
 
-    std::optional<AShape*> hitTest(Vec2F const& point)
+    AShape* hitTest(Vec2F const& point)
     {
         for (auto child = getChildren().rbegin(); child != getChildren().rend(); ++child)
         {
@@ -49,9 +49,9 @@ public:
             }
         }
 
-        return std::nullopt;
+        return nullptr;
     }
-    std::optional<AShape const*> hitTest(Vec2F const& point) const
+    AShape const* hitTest(Vec2F const& point) const
     {
         for (auto child = getChildren().rbegin(); child != getChildren().rend(); ++child)
         {
@@ -62,7 +62,7 @@ public:
             }
         }
 
-        return std::nullopt;
+        return nullptr;
     }
 
 private:
