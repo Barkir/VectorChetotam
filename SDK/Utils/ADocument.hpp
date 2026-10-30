@@ -13,6 +13,7 @@ class IDocument : private AObject
 {
 public:
     using ShapeID = size_t;
+    static constexpr ShapeID NULLSHAPE = SIZE_MAX;
 
 public:
     virtual ~IDocument() = default;
@@ -21,8 +22,7 @@ public:
 
     virtual ShapeID addShape(std::unique_ptr<AShape> shape)
     {
-        addChild(std::unique_ptr<AObject>(shape.get()));
-        shape.release();
+        addChild(std::move(shape));
         return getChildren().size() - 1;
     }
     virtual AShape* queryShape(ShapeID const& sid)
@@ -38,31 +38,18 @@ public:
 
 
 
-    AShape* hitTest(Vec2F const& point)
-    {
-        for (auto child = getChildren().rbegin(); child != getChildren().rend(); ++child)
-        {
-            AShape* const shape = static_cast<AShape*>(child->get());
-            if (shape->hitTest(point))
-            {
-                return shape;
-            }
-        }
-
-        return nullptr;
-    }
-    AShape const* hitTest(Vec2F const& point) const
+    ShapeID hitTest(Vec2F const& point) const
     {
         for (auto child = getChildren().rbegin(); child != getChildren().rend(); ++child)
         {
             AShape const* const shape = static_cast<AShape const*>(child->get());
             if (shape->hitTest(point))
             {
-                return shape;
+                return getChildren().size() - 1 - (child - getChildren().rbegin());
             }
         }
 
-        return nullptr;
+        return NULLSHAPE;
     }
 
 private:
