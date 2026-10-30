@@ -20,35 +20,44 @@ public:
 
 
 
-    virtual ShapeID addShape(std::unique_ptr<AShape> const &shape) {
+    virtual ShapeID addShape(std::unique_ptr<AShape> const& shape)
+    {
         addChild(std::unique_ptr<AObject>(shape.get()));
         return getChildren().size() - 1;
     }
-    virtual AShape *queryShape(ShapeID const &sid) {
-        return static_cast<AShape *>(getChildren()[sid].get());
+    virtual AShape* queryShape(ShapeID const& sid)
+    {
+        return static_cast<AShape*>(getChildren()[sid].get());
     }
-    virtual AShape const *queryShape(ShapeID const &sid) const {
-        return static_cast<AShape const *>(getChildren()[sid].get());
+    virtual AShape const* queryShape(ShapeID const& sid) const
+    {
+        return static_cast<AShape const*>(getChildren()[sid].get());
     }
     // I can't remove children for now
-    virtual void removeShape(ShapeID const &sid) = 0;
+    virtual void removeShape(ShapeID const& sid) = 0;
 
 
 
-    std::optional<AShape *> hitTest(Vec2F const &point) {
-        for (auto child = getChildren().rbegin(); child != getChildren().rend(); ++child) {
-            AShape *const shape = static_cast<AShape *>(child->get());
-            if (shape->hitTest(point)) {
+    std::optional<AShape*> hitTest(Vec2F const& point)
+    {
+        for (auto child = getChildren().rbegin(); child != getChildren().rend(); ++child)
+        {
+            AShape* const shape = static_cast<AShape*>(child->get());
+            if (shape->hitTest(point))
+            {
                 return shape;
             }
         }
 
         return std::nullopt;
     }
-    std::optional<AShape const *> hitTest(Vec2F const &point) const {
-        for (auto child = getChildren().rbegin(); child != getChildren().rend(); ++child) {
-            AShape const *const shape = static_cast<AShape const *>(child->get());
-            if (shape->hitTest(point)) {
+    std::optional<AShape const*> hitTest(Vec2F const& point) const
+    {
+        for (auto child = getChildren().rbegin(); child != getChildren().rend(); ++child)
+        {
+            AShape const* const shape = static_cast<AShape const*>(child->get());
+            if (shape->hitTest(point))
+            {
                 return shape;
             }
         }
